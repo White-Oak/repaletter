@@ -1,5 +1,9 @@
 package me.oak.imgcolor;
 
+import me.oak.imgcolor.octo.OctoTreeColor;
+import me.oak.imgcolor.octo.Cube;
+import me.oak.imgcolor.octo.SlowOctoStore;
+import me.oak.imgcolor.octo.FastOctoStore;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -36,11 +40,11 @@ public class Main {
 	Store store = result.result;
 	Log.info("Palette loading is done in " + result.totalTime + " ms");
 
-	if (store instanceof OctoTreeStore) {
-	    ((OctoTreeStore) store).getOtc().printCurrentDebug();
+	if (store instanceof FastOctoStore) {
+	    ((FastOctoStore) store).getOtc().printCurrentDebug();
 	}
-	if (store instanceof Storev3) {
-	    ((Storev3) store).getOtc().printCurrentDebug();
+	if (store instanceof SlowOctoStore) {
+	    ((SlowOctoStore) store).getOtc().printCurrentDebug();
 	}
 
 	Timer.Result<int[]> result1 = Timer.time(() -> buildOriginalPictureWithPallette(store));
@@ -49,15 +53,15 @@ public class Main {
 
 	save(pixelsOutput);
 
-	if (store instanceof Storev3) {
-	    storev3Test((Storev3) store);
+	if (store instanceof SlowOctoStore) {
+	    storev3Test((SlowOctoStore) store);
 	}
-	if (store instanceof OctoTreeStore) {
-	    ((OctoTreeStore) store).getOtc().printDebug();
+	if (store instanceof FastOctoStore) {
+	    ((FastOctoStore) store).getOtc().printDebug();
 	}
     }
 
-    private static void storev3Test(Storev3 storev3) {
+    private static void storev3Test(SlowOctoStore storev3) {
 	final OctoTreeColor otc = (storev3).getOtc();
 	otc.printDebug();
 //	Timer.Result<Optional<Bag<Color>>> time;
@@ -95,7 +99,7 @@ public class Main {
 
     private static Store getStoreWithPalette() throws IOException {
 	int[] pixelsPalette = getColors("palette.png");
-	Store store = new Storev2();
+	Store store = new SerialStore();
 	for (int i : pixelsPalette) {
 	    store.addColor(i);
 	}

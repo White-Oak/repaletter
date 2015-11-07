@@ -1,8 +1,10 @@
-package me.oak.imgcolor;
+package me.oak.imgcolor.octo;
 
 import java.util.*;
 import java.util.stream.Stream;
 import lombok.NonNull;
+import me.oak.imgcolor.Bag;
+import me.oak.imgcolor.Color;
 import me.whiteoak.minlog.Log;
 
 /**

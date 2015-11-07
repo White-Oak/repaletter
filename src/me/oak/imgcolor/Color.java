@@ -11,10 +11,7 @@ public class Color implements Comparable<Color> {
 
     private static final Color[][][] CACHE;
 
-    final int red;
-    final int green;
-    final int blue;
-    final int color;
+    public final int red, green, blue, color;
 
     public static int getColor(int color) {
 	return getColor(getRed(color), getGreen(color), getBlue(color));

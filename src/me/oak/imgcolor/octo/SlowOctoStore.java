@@ -1,13 +1,16 @@
-package me.oak.imgcolor;
+package me.oak.imgcolor.octo;
 
 import java.util.Collection;
 import lombok.Getter;
+import me.oak.imgcolor.Bag;
+import me.oak.imgcolor.Color;
+import me.oak.imgcolor.Store;
 
 /**
  *
  * @author White Oak
  */
-public class Storev3 extends Store {
+public class SlowOctoStore extends Store {
 
     @Getter private final OctoTreeColor otc = new OctoTreeColor();
 

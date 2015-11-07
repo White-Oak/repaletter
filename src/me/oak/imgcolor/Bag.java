@@ -8,6 +8,6 @@ import lombok.RequiredArgsConstructor;
  */
 @RequiredArgsConstructor public class Bag<T> {
 
-    final T value;
-    int amount;
+    public final T value;
+    public int amount;
 }

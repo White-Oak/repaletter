@@ -1,7 +1,8 @@
-package me.oak.imgcolor;
+package me.oak.imgcolor.octo;
 
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
+import me.oak.imgcolor.Color;
 
 /**
  *

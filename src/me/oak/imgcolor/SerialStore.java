@@ -9,7 +9,7 @@ import lombok.NonNull;
  *
  * @author White Oak
  */
-public class Storev2 extends Store {
+public class SerialStore extends Store {
 
     @Getter private final TIntObjectMap<Bag<Color>> map = new TIntObjectHashMap<>();
 
