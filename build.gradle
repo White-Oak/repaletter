@@ -10,7 +10,7 @@ buildscript {
         classpath 'org.springframework.build.gradle:propdeps-plugin:0.0.6'
     }
 }
-
+project.ext.mainClassName = "me.oak.imgcolor.Main"
 apply plugin: "java"
 apply plugin: 'propdeps'
 
@@ -40,9 +40,21 @@ ext{
     mBuildNumber = 1
     mVersion = "1.0.0"
 }
+jar {
+    from files(sourceSets.main.output.classesDir)
+    from files(sourceSets.main.output.resourcesDir)
+    from { configurations.compile.collect { zipTree(it) } }
+    //    libsDirName = deployFolder
+
+    //    archiveName = appName + "-" + mVersion + "-b" + mBuildNumber + ".jar"
+    manifest {
+	attributes 'Main-Class': project.mainClassName
+    }
+}
+
 
 task run(dependsOn: classes, type: JavaExec) {
-    main = "me.oak.imgcolor.Main"
+    main = mainClassName
     classpath = sourceSets.main.runtimeClasspath
     standardInput = System.in
     ignoreExitValue = true
@@ -50,7 +62,7 @@ task run(dependsOn: classes, type: JavaExec) {
 }
 
 task debug(dependsOn: classes, type: JavaExec) {
-    main = "me.oak.imgcolor.Main"
+    main = mainClassName
     classpath = sourceSets.main.runtimeClasspath
     standardInput = System.in
     ignoreExitValue = true

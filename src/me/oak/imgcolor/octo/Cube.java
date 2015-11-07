@@ -1,21 +1,21 @@
 package me.oak.imgcolor.octo;
 
-import lombok.EqualsAndHashCode;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import me.oak.imgcolor.Color;
 
 /**
  *
  * @author White Oak
  */
-@RequiredArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode
 public class Cube {
 
-    final int x, y, z, size;
+    final int x, y, z;
+    int radius;
 
     public static Cube centeredAround(int x, int y, int z, int halfSize) {
-	return new Cube(x - halfSize, y - halfSize, z - halfSize, halfSize * 2);
+	return new Cube(x, y, z, halfSize);
     }
 
     public static Cube centeredAround(Color color, int halfSize) {
@@ -23,8 +23,12 @@ public class Cube {
     }
 
     public static Cube centeredAround(Cube cube, int halfSize) {
-	final int halfSize2 = cube.size / 2;
-	return centeredAround(cube.x + halfSize2, cube.y + halfSize2, cube.z + halfSize2, halfSize);
+	return centeredAround(cube.x, cube.y, cube.z, halfSize);
+    }
+
+    public Cube increaseRadius(int delta) {
+	radius += delta;
+	return this;
     }
 
     public boolean contains(Color color) {
@@ -32,33 +36,33 @@ public class Cube {
     }
 
     public boolean contains(Cube cube) {
-	return cube.size <= size && contains(cube.x, cube.y, cube.z);
+	int x = Math.abs(this.x - cube.x);
+	int y = Math.abs(this.y - cube.y);
+	int z = Math.abs(this.z - cube.z);
+	int radDiff = cube.radius - radius;
+	return ((radDiff - x) < 0)
+		&& ((radDiff - y) < 0)
+		&& ((radDiff - z) < 0);
     }
 
     public boolean contains(int x, int y, int z) {
-	return (x >= this.x && x < this.x + size)
-		&& (y >= this.y && y < this.y + size)
-		&& (z >= this.z && z < this.z + size);
+	return ((Math.abs(x - this.x) < radius) || (this.x - x == radius))
+		&& ((Math.abs(y - (this.y)) < radius) || (this.y - y == radius))
+		&& ((Math.abs(z - (this.z)) < radius) || (this.z - z == radius));
     }
 
     public boolean intersects(Cube cube) {
-	int halfSize = size / 2;
-	int halfSize2 = cube.size / 2;
-	final int sizeSum = halfSize + halfSize2;
-	final int sizeDiff = halfSize - halfSize2;
-	return (Math.abs(x - cube.x + sizeDiff) <= sizeSum)
-		&& (Math.abs(y - cube.y + sizeDiff) <= sizeSum)
-		&& (Math.abs(z - cube.z + sizeDiff) <= sizeSum);
+	final int sizeSum = radius + cube.radius;
+	return (Math.abs(x - cube.x) <= sizeSum)
+		&& (Math.abs(y - cube.y) <= sizeSum)
+		&& (Math.abs(z - cube.z) <= sizeSum);
     }
 
     public boolean nearby(Cube cube) {
-	int halfSize = size / 2;
-	int halfSize2 = cube.size / 2;
-	final int sizeSum = halfSize + halfSize2;
-	final int sizeDiff = halfSize - halfSize2;
+	final int sizeSum = radius + cube.radius;
 	return intersects(cube)
-		&& ((Math.abs(cube.x - x + sizeDiff) == sizeSum)
-		    || (Math.abs(cube.y - y + sizeDiff) == sizeSum)
-		    || (Math.abs(cube.z - z + sizeDiff) == sizeSum));
+		&& ((Math.abs(cube.x - x) == sizeSum)
+		    || (Math.abs(cube.y - y) == sizeSum)
+		    || (Math.abs(cube.z - z) == sizeSum));
     }
 }

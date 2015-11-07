@@ -17,8 +17,12 @@ public class OctoTreeColor {
     private long gettingTime, removingTime;
     private int timesCalled;
     private int timesCalledInstantly;
-    private final OctoNode root = new OctoNode(new Cube(0, 0, 0, 256), 0, null);
-    private final LinkedList<Bag<Color>> linkedList = new LinkedList<>();
+    private final OctoNode root = new OctoNode(Cube.centeredAround(128, 128, 128, 128), 0, null);
+    private final List<Bag<Color>> linkedList = new ArrayList<>();
+
+    public OctoNode getNode(Color color) {
+	return root.getNode(color);
+    }
 
     public boolean insert(@NonNull Color color) {
 	return root.insert(color);
@@ -70,22 +74,25 @@ public class OctoTreeColor {
 
     public Bag<Color> getNearest(Color color) {
 	timesCalled++;
-	timer.start();
 	Bag<Color> get = get(color);
 	if (get != null) {
 	    timesCalledInstantly++;
 	    return get;
 	}
 	OctoNode node = root.getNode(color);
-	if (node == null) {
-	    System.out.println("s");
+	int DELTA = 0;
+	if (node.size() == 0) {
+	    DELTA = node.bounds.radius + 1;
+	} else {
+	    DELTA = 2;
 	}
-	int DELTA = node.bounds.size / 2;
 	Optional<Bag<Color>> anyIn;
+	timer.start();
+	Cube centeredAround = Cube.centeredAround(node.bounds, DELTA);
 	do {
 	    assert DELTA < 10000 : "The shit is real";
-	    DELTA += OctoNode.MIN_WIDTH / 2;
-	    anyIn = root.getAnyIn(Cube.centeredAround(node.bounds, DELTA));
+	    anyIn = root.getAnyIn(centeredAround.increaseRadius(1));
+	    DELTA += 1;
 	} while (!anyIn.isPresent());
 	gettingTime += timer.total();
 	return anyIn.get();
@@ -126,6 +133,7 @@ class OctoNode {
 	    for (OctoNode node : nodes) {
 		if (node.insert(color)) {
 		    anyInserted = true;
+		    break;
 		}
 	    }
 	    assert anyInserted;
@@ -140,19 +148,20 @@ class OctoNode {
 	    throw new RuntimeException("Cannot subdive more than once");
 	}
 	nodes = new OctoNode[8];
-	final int x = bounds.x;
-	final int y = bounds.y;
-	final int z = bounds.z;
-	final int halfSize = bounds.size / 2;
+	final int radius = bounds.radius;
+	final int halfRadius = radius / 2;
+	final int x = bounds.x - halfRadius;
+	final int y = bounds.y - halfRadius;
+	final int z = bounds.z - halfRadius;
 	final int newDepth = depth + 1;
-	nodes[0] = new OctoNode(new Cube(x, y, z, halfSize), newDepth, this);
-	nodes[1] = new OctoNode(new Cube(x, y + halfSize, z, halfSize), newDepth, this);
-	nodes[2] = new OctoNode(new Cube(x, y, z + halfSize, halfSize), newDepth, this);
-	nodes[3] = new OctoNode(new Cube(x, y + halfSize, z + halfSize, halfSize), newDepth, this);
-	nodes[4] = new OctoNode(new Cube(x + halfSize, y, z, halfSize), newDepth, this);
-	nodes[5] = new OctoNode(new Cube(x + halfSize, y + halfSize, z, halfSize), newDepth, this);
-	nodes[6] = new OctoNode(new Cube(x + halfSize, y, z + halfSize, halfSize), newDepth, this);
-	nodes[7] = new OctoNode(new Cube(x + halfSize, y + halfSize, z + halfSize, halfSize), newDepth, this);
+	nodes[0] = new OctoNode(Cube.centeredAround(x, y, z, halfRadius), newDepth, this);
+	nodes[1] = new OctoNode(Cube.centeredAround(x, y + radius, z, halfRadius), newDepth, this);
+	nodes[2] = new OctoNode(Cube.centeredAround(x, y, z + radius, halfRadius), newDepth, this);
+	nodes[3] = new OctoNode(Cube.centeredAround(x, y + radius, z + radius, halfRadius), newDepth, this);
+	nodes[4] = new OctoNode(Cube.centeredAround(x + radius, y, z, halfRadius), newDepth, this);
+	nodes[5] = new OctoNode(Cube.centeredAround(x + radius, y + radius, z, halfRadius), newDepth, this);
+	nodes[6] = new OctoNode(Cube.centeredAround(x + radius, y, z + radius, halfRadius), newDepth, this);
+	nodes[7] = new OctoNode(Cube.centeredAround(x + radius, y + radius, z + radius, halfRadius), newDepth, this);
 	elements.forEach(element -> {
 	    for (OctoNode node : nodes) {
 		for (int i = 0; i < element.amount; i++) {
@@ -245,9 +254,10 @@ class OctoNode {
 
     public void getAllIn(Cube range, List<Bag<Color>> colors) {
 	if (cachedSize > 0) {
-	    if (range.contains(bounds)) {
-		getAll(colors);
-	    } else if (bounds.intersects(range)) {
+//	    if (range.contains(bounds)) {
+//		getAll(colors);
+//	    } else 
+	    if (bounds.intersects(range)) {
 		if (elements != null) {
 		    elements.stream()
 			    .filter(bag -> range.contains(bag.value))
@@ -328,12 +338,13 @@ class OctoNode {
 
     public Optional<Bag<Color>> getAnyIn(Cube range) {
 	if (cachedSize > 0) {
-	    if (range.contains(bounds)) {
-		return Optional.of(getAny());
-	    } else if (bounds.intersects(range)) {
+//	    if (range.contains(bounds)) {
+//		return Optional.of(getAny());
+//	    } else
+	    if (bounds.intersects(range)) {
 		if (elements != null) {
 		    for (Bag<Color> next : elements) {
-			if (bounds.contains(next.value)) {
+			if (range.contains(next.value)) {
 			    return Optional.of(next);
 			}
 		    }

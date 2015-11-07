@@ -15,13 +15,14 @@ import me.whiteoak.minlog.Log;
  */
 public class Main {
 
-    private static final File def = new File("ins/in6/");
+    private static final File def = new File("ins/in5/");
 
     public static void main(String[] args) throws IOException {
-	assert (Cube.centeredAround(50, 50, 50, 5).intersects(new Cube(45, 45, 45, 2)));
+	assert (Cube.centeredAround(50, 50, 50, 5).contains(45, 45, 45));
+	assert (Cube.centeredAround(50, 50, 50, 5).intersects(Cube.centeredAround(45, 45, 45, 2)));
 	assert !(Cube.centeredAround(50, 50, 50, 5).contains(55, 55, 55));
 	assert Cube.centeredAround(50, 50, 50, 50).intersects(Cube.centeredAround(50, 50, 50, 5));
-	assert (new Cube(0, 0, 0, 64).nearby(new Cube(64, 64, 64, 64)));
+	assert (Cube.centeredAround(0, 0, 0, 64).nearby(Cube.centeredAround(128, 128, 128, 64)));
 	imageWork();
     }
 
@@ -81,7 +82,7 @@ public class Main {
 			processed++;
 			pixelsOutput[acc] = store.getNearest(pixelsOriginal[acc]);
 			if (isIn(processed, progress)) {
-			    System.out.printf("%d%% in %d ms\n", (progressPercent++) * 5, timer.total());
+			    System.out.printf("%d%% in %d ms\r\n", (progressPercent++) * 5, timer.total());
 			}
 		    }
 		    if (k % 2 == 0) {
@@ -92,14 +93,6 @@ public class Main {
 		}
 	    }
 	}
-
-//	for (int i = 0; i < pixelsOriginal.length; i++) {
-//	    pixelsOutput[i] = store.getNearest(pixelsOriginal[i]);
-//	    if (isIn(i, progress)) {
-//		total = timer.total();
-//		System.out.println((progressPercent++) * 5 + "% in " + total + " ms");
-//	    }
-//	}
 	return pixelsOutput;
     }
 
