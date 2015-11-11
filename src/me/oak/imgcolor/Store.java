@@ -25,4 +25,14 @@ public abstract class Store {
     public abstract void addColor(int color);
 
     public abstract int getNearest(int color);
+
+    public abstract int size();
+
+    public void finishedAdding() {
+
+    }
+
+    public void finished() {
+
+    }
 }

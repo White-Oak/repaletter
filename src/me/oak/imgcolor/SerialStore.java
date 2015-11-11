@@ -61,4 +61,9 @@ public class SerialStore extends Store {
 	}
     }
 
+    @Override
+    public int size() {
+	return map.size();
+    }
+
 }
