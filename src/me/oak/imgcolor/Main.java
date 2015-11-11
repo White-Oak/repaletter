@@ -1,7 +1,7 @@
 package me.oak.imgcolor;
 
 import java.io.IOException;
-import me.oak.imgcolor.octo.*;
+import me.oak.imgcolor.octo.Cube;
 import me.oak.imgcolor.util.Timer;
 import me.whiteoak.minlog.FileLogger;
 import me.whiteoak.minlog.Log;
@@ -14,6 +14,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
 	Log.setLogger(new FileLogger());
+	Log.DEBUG();
 	Log.info("The image app has started (" + VersionCode.getCode() + ")");
 	long time = Timer.time((Runnable) (() -> Color.of(0)));
 	Log.info("Colors' cache loading is done in " + time + " ms");

@@ -16,7 +16,7 @@ import me.whiteoak.minlog.Log;
  */
 public class APIDraft {
 
-    private static final File DEFAULT_DIR = new File("ins/in5/");
+    private static final File DEFAULT_DIR = new File("ins/in8/");
 
     private Image image;
     private Store store;
@@ -65,7 +65,7 @@ public class APIDraft {
 	store = new FastOctoStore();
 	final int length = this.image.pixels.length;
 	if (pixelsPalette.length < length) {
-	    Log.info("Provided is not big enough, but I can deal with it");
+	    Log.info("Provided palette is not big enough, but I can deal with it");
 	    //If palette is smaller than an original image, some of palette's pixels will be used more than once
 	    final double diff = (length - pixelsPalette.length) / pixelsPalette.length;
 	    double counter = 0;

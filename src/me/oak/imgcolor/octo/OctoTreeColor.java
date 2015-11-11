@@ -5,7 +5,6 @@ import java.util.stream.Stream;
 import lombok.NonNull;
 import me.oak.imgcolor.Bag;
 import me.oak.imgcolor.Color;
-import me.whiteoak.minlog.Log;
 
 /**
  *
@@ -140,7 +139,6 @@ class OctoNode {
     }
 
     private void subdivide() {
-	Log.debug("octo-tree", "Dividing into smaller pieces");
 	if (nodes != null) {
 	    throw new RuntimeException("Cannot subdive more than once");
 	}
