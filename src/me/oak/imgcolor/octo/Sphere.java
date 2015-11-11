@@ -20,7 +20,7 @@ public class Sphere extends Cube {
     }
 
     protected Sphere(int x, int y, int z, int radius) {
-	super(x, y, z, radius);
+	super(x, y, z, (short) radius);
 	doubledRadius = radius * radius;
 	smallRadius = (int) (Math.sqrt(2) / 2 * radius);
     }

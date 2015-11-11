@@ -12,10 +12,10 @@ import me.oak.imgcolor.Color;
 public class Cube {
 
     final Color color;
-    int radius;
+    short radius;
 
     public static Cube centeredAround(int x, int y, int z, int halfSize) {
-	return new Cube(x, y, z, halfSize);
+	return new Cube(x, y, z, (short) halfSize);
     }
 
     public static Cube centeredAround(Color color, int halfSize) {
@@ -26,7 +26,7 @@ public class Cube {
 	return centeredAround(cube.getX(), cube.getY(), cube.getZ(), halfSize);
     }
 
-    protected Cube(int x, int y, int z, int radius) {
+    protected Cube(int x, int y, int z, short radius) {
 	this(Color.of(x, y, z), radius);
     }
 

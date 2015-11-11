@@ -17,7 +17,7 @@ public class OctoTreeColor {
     private long gettingTime, removingTime;
     private int timesCalled;
     private int timesCalledInstantly;
-    private final OctoNode root = new OctoNode(Cube.centeredAround(128, 128, 128, 128), 0, null);
+    private final OctoNode root = new OctoNode(Cube.centeredAround(128, 128, 128, 128), 0);
     private final List<Bag<Color>> linkedList = new ArrayList<>();
 
     public OctoNode getNode(Color color) {
@@ -113,12 +113,9 @@ class OctoNode {
 
     private int cachedSize;
 
-    private final OctoNode parent;
-
-    OctoNode(Cube bounds, int depth, OctoNode parent) {
+    OctoNode(Cube bounds, int depth) {
 	this.bounds = bounds;
 	this.depth = depth;
-	this.parent = parent;
     }
 
     public boolean insert(Color color) {
@@ -162,16 +159,16 @@ class OctoNode {
 //		    y + (i % 2) == 0 ? 0 : radius,
 //		    z + (i % 4) < 2 ? 0 : radius,
 //		    halfRadius);
-//	    nodes[i] = new OctoNode(cube, newDepth, this);
+//	    nodes[i] = new OctoNode(cube, newDepth);
 //	}
-	nodes[0] = new OctoNode(Cube.centeredAround(x, y, z, halfRadius), newDepth, this);
-	nodes[1] = new OctoNode(Cube.centeredAround(x, y + radius, z, halfRadius), newDepth, this);
-	nodes[2] = new OctoNode(Cube.centeredAround(x, y, z + radius, halfRadius), newDepth, this);
-	nodes[3] = new OctoNode(Cube.centeredAround(x, y + radius, z + radius, halfRadius), newDepth, this);
-	nodes[4] = new OctoNode(Cube.centeredAround(x + radius, y, z, halfRadius), newDepth, this);
-	nodes[5] = new OctoNode(Cube.centeredAround(x + radius, y + radius, z, halfRadius), newDepth, this);
-	nodes[6] = new OctoNode(Cube.centeredAround(x + radius, y, z + radius, halfRadius), newDepth, this);
-	nodes[7] = new OctoNode(Cube.centeredAround(x + radius, y + radius, z + radius, halfRadius), newDepth, this);
+	nodes[0] = new OctoNode(Cube.centeredAround(x, y, z, halfRadius), newDepth);
+	nodes[1] = new OctoNode(Cube.centeredAround(x, y + radius, z, halfRadius), newDepth);
+	nodes[2] = new OctoNode(Cube.centeredAround(x, y, z + radius, halfRadius), newDepth);
+	nodes[3] = new OctoNode(Cube.centeredAround(x, y + radius, z + radius, halfRadius), newDepth);
+	nodes[4] = new OctoNode(Cube.centeredAround(x + radius, y, z, halfRadius), newDepth);
+	nodes[5] = new OctoNode(Cube.centeredAround(x + radius, y + radius, z, halfRadius), newDepth);
+	nodes[6] = new OctoNode(Cube.centeredAround(x + radius, y, z + radius, halfRadius), newDepth);
+	nodes[7] = new OctoNode(Cube.centeredAround(x + radius, y + radius, z + radius, halfRadius), newDepth);
 	elements.forEach(element -> {
 	    for (OctoNode node : nodes) {
 		for (int i = 0; i < element.amount; i++) {

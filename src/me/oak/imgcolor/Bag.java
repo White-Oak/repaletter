@@ -9,5 +9,5 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor public class Bag<T> {
 
     public final T value;
-    public int amount;
+    public short amount;
 }

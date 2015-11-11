@@ -3,7 +3,7 @@ package me.oak.imgcolor;
 
 public final class VersionCode {
 
-    public static final int BUILD_NUMBER = 402;
+    public static final int BUILD_NUMBER = 403;
     public static final String VERSION = "1.0.0";
 
     public static String getCode() {
