@@ -30,7 +30,7 @@ public class FastOctoStore extends OctoStore {
 	Cube centeredAround = Cube.centeredAround(of, node.bounds.radius);
 	do {
 	    assert centeredAround.radius < 1000 : "The shit is real";
-	    colors = otc.getAllIn(centeredAround.increaseRadius(1));
+	    colors = otc.getAllIn(centeredAround.increaseRadius(2));
 	} while (colors.isEmpty());
 
 	Bag<Color> minColorBag = null;
@@ -40,10 +40,6 @@ public class FastOctoStore extends OctoStore {
 	    int min = Integer.MAX_VALUE;
 	    for (Bag<Color> color1 : colors) {
 		int diff = calculateDifference(of, color1.value);
-//		if (diff == 0) {
-//		    minColorBag = color1;
-//		    break;
-//		}
 		if (diff < min) {
 		    min = diff;
 		    minColorBag = color1;

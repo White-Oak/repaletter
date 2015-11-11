@@ -26,7 +26,7 @@ public abstract class Store {
 
     static {
 	for (int i = 0; i < S.length; i++) {
-	    final int name = (i - 514);
+	    final int name = (i - 257);
 	    S[i] = name * name;
 	}
     }
