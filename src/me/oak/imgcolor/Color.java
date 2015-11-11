@@ -19,11 +19,14 @@ public class Color implements Comparable<Color> {
     }
 
     public static Color of(int red, int green, int blue) {
+	if (CACHE[red][green][blue] == null) {
+	    CACHE[red][green][blue] = new Color((short) red, (short) green, (short) blue);
+	}
 	return CACHE[red][green][blue];
     }
 
     public static Color of(int color) {
-	return CACHE[getRed(color)][getGreen(color)][getBlue(color)];
+	return of(getRed(color), getGreen(color), getBlue(color));
     }
 
     static short getRed(int color) {
@@ -44,18 +47,18 @@ public class Color implements Comparable<Color> {
 
     static {
 	CACHE = new Color[256][256][256];
-	for (short i = 0; i < CACHE.length; i++) {
-	    Color[][] colorses = CACHE[i];
-	    for (short j = 0; j < colorses.length; j++) {
-		Color[] colorse = colorses[j];
-		for (short k = 0; k < colorse.length; k++) {
-		    Color color = new Color(i, j, k);
-		    colorse[k] = color;
-		    assert getColor(color.red, color.green, color.blue) == color.color;
-		    assert getColor(getRed(color.color), getGreen(color.color), getBlue(color.color)) == color.color;
-		}
-	    }
-	}
+//	for (short i = 0; i < CACHE.length; i++) {
+//	    Color[][] colorses = CACHE[i];
+//	    for (short j = 0; j < colorses.length; j++) {
+//		Color[] colorse = colorses[j];
+//		for (short k = 0; k < colorse.length; k++) {
+//		    Color color = new Color(i, j, k);
+//		    colorse[k] = color;
+////		    assert getColor(color.red, color.green, color.blue) == color.color;
+////		    assert getColor(getRed(color.color), getGreen(color.color), getBlue(color.color)) == color.color;
+//		}
+//	    }
+//	}
     }
 
     private Color(short red, short green, short blue) {
