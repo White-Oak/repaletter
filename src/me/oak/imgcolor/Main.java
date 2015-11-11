@@ -18,11 +18,6 @@ public class Main {
     private static final File def = new File("ins/in5/");
 
     public static void main(String[] args) throws IOException {
-	assert (Cube.centeredAround(50, 50, 50, 5).contains(45, 45, 45));
-	assert (Cube.centeredAround(50, 50, 50, 5).intersects(Cube.centeredAround(45, 45, 45, 2)));
-	assert !(Cube.centeredAround(50, 50, 50, 5).contains(55, 55, 55));
-	assert Cube.centeredAround(50, 50, 50, 50).intersects(Cube.centeredAround(50, 50, 50, 5));
-	assert (Cube.centeredAround(0, 0, 0, 64).nearby(Cube.centeredAround(128, 128, 128, 64)));
 	imageWork();
     }
 
@@ -33,6 +28,8 @@ public class Main {
 
 	Timer.Result<Color> time = Timer.time(() -> Color.of(0));
 	Log.info("Colors' cache loading is done in " + time.totalTime + " ms");
+
+	tests();
 
 	Timer.Result<Store> result = Timer.time(() -> getStoreWithPalette());
 	Store store = result.result;
@@ -51,6 +48,14 @@ public class Main {
 	if (store instanceof OctoStore) {
 	    ((OctoStore) store).getOtc().printDebug();
 	}
+    }
+
+    private static void tests() {
+	assert (Cube.centeredAround(50, 50, 50, 5).contains(45, 45, 45));
+	assert (Cube.centeredAround(50, 50, 50, 5).intersects(Cube.centeredAround(45, 45, 45, 2)));
+	assert !(Cube.centeredAround(50, 50, 50, 5).contains(55, 55, 55));
+	assert Cube.centeredAround(50, 50, 50, 50).intersects(Cube.centeredAround(50, 50, 50, 5));
+	assert (Cube.centeredAround(0, 0, 0, 64).nearby(Cube.centeredAround(128, 128, 128, 64)));
     }
 
     private static int[] buildOriginalPictureWithPallette(Store store) throws IOException {
