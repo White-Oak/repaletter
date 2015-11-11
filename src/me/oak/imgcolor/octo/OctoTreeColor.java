@@ -150,10 +150,20 @@ class OctoNode {
 	nodes = new OctoNode[8];
 	final int radius = bounds.radius;
 	final int halfRadius = radius / 2;
-	final int x = bounds.x - halfRadius;
-	final int y = bounds.y - halfRadius;
-	final int z = bounds.z - halfRadius;
+	final int x = bounds.getX() - halfRadius;
+	final int y = bounds.getY() - halfRadius;
+	final int z = bounds.getZ() - halfRadius;
 	final int newDepth = depth + 1;
+	//a cycle that replaces next 8 lines, pretty neat?
+	//I guess no, cause it still takes 8 lines kek
+//	for (int i = 0; i < nodes.length; i++) {
+//	    final Cube cube = Cube.centeredAround(
+//		    x + i < 4 ? 0 : radius,
+//		    y + (i % 2) == 0 ? 0 : radius,
+//		    z + (i % 4) < 2 ? 0 : radius,
+//		    halfRadius);
+//	    nodes[i] = new OctoNode(cube, newDepth, this);
+//	}
 	nodes[0] = new OctoNode(Cube.centeredAround(x, y, z, halfRadius), newDepth, this);
 	nodes[1] = new OctoNode(Cube.centeredAround(x, y + radius, z, halfRadius), newDepth, this);
 	nodes[2] = new OctoNode(Cube.centeredAround(x, y, z + radius, halfRadius), newDepth, this);

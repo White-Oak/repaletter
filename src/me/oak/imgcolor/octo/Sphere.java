@@ -16,7 +16,7 @@ public class Sphere extends Cube {
     }
 
     public static Sphere centeredAround(Cube cube, int halfSize) {
-	return centeredAround(cube.x, cube.y, cube.z, halfSize);
+	return centeredAround(cube.getX(), cube.getY(), cube.getZ(), halfSize);
     }
 
     protected Sphere(int x, int y, int z, int radius) {
@@ -34,7 +34,7 @@ public class Sphere extends Cube {
 
     @Override
     public boolean contains(Cube cube) {
-	return cube.radius <= radius && contains(cube.x, cube.y, cube.z);
+	return cube.radius <= radius && contains(cube.getX(), cube.getY(), cube.getZ());
 //	return cube.radius <= smallRadius;
     }
 
@@ -43,9 +43,10 @@ public class Sphere extends Cube {
 	if (!super.contains(x, y, z)) {
 	    return false;
 	}
-	final int xC = x - this.x;
-	final int yC = y - this.y;
-	final int zC = z - this.z;
+	final int xC = x - getX();
+	final int yC = y - getY();
+	final int zC = z - getZ();
+	//What if replace squares with lookup tables
 	return (xC * xC
 		+ yC * yC
 		+ zC * zC <= doubledRadius);
