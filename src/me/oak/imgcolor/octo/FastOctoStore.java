@@ -1,6 +1,6 @@
 package me.oak.imgcolor.octo;
 
-import java.util.Collection;
+import java.util.List;
 import me.oak.imgcolor.Bag;
 import me.oak.imgcolor.Color;
 
@@ -24,29 +24,30 @@ public class FastOctoStore extends OctoStore {
 	    return instant.value.color;
 	}
 
-	Collection<Bag<Color>> colors = null;
+	List<Bag<Color>> colors = null;
 	final Color of = Color.of(color);
 	OctoNode node = otc.getNode(of);
-	int DELTA = 0;
-	if (node.size() == 0) {
-	    DELTA = node.bounds.radius + 1;
-	} else {
-	    DELTA = 2;
-	}
-	Cube centeredAround = Cube.centeredAround(of, DELTA);
+	Cube centeredAround = Cube.centeredAround(of, node.bounds.radius);
 	do {
-	    assert DELTA < 256 * 2 : "The shit is real";
+	    assert centeredAround.radius < 1000 : "The shit is real";
 	    colors = otc.getAllIn(centeredAround.increaseRadius(1));
-	    DELTA += 1;
 	} while (colors.isEmpty());
-	int min = Integer.MAX_VALUE;
+
 	Bag<Color> minColorBag = null;
-	for (Bag<Color> color1 : colors) {
-	    int diff = calculateDifference(of, color1.value);
-	    if (diff < min) {
-		assert diff >= 0 : diff + "";
-		min = diff;
-		minColorBag = color1;
+	if (colors.size() == 1) {
+	    minColorBag = colors.get(0);
+	} else {
+	    int min = Integer.MAX_VALUE;
+	    for (Bag<Color> color1 : colors) {
+		int diff = calculateDifference(of, color1.value);
+//		if (diff == 0) {
+//		    minColorBag = color1;
+//		    break;
+//		}
+		if (diff < min) {
+		    min = diff;
+		    minColorBag = color1;
+		}
 	    }
 	}
 	boolean remove = otc.remove(minColorBag.value);

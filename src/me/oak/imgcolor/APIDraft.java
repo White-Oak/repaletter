@@ -16,7 +16,7 @@ import me.whiteoak.minlog.Log;
  */
 public class APIDraft {
 
-    private static final File DEFAULT_DIR = new File("ins/in8/");
+    private static final File DEFAULT_DIR = new File("ins/in5/");
 
     private Image image;
     private Store store;

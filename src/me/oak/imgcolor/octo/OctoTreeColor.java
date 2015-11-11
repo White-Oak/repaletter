@@ -17,7 +17,7 @@ public class OctoTreeColor {
     private int timesCalled;
     private int timesCalledInstantly;
     private final OctoNode root = new OctoNode(Cube.centeredAround(128, 128, 128, 128), 0);
-    private final List<Bag<Color>> linkedList = new ArrayList<>();
+    private final ArrayList<Bag<Color>> linkedList = new ArrayList<>();
 
     public OctoNode getNode(Color color) {
 	return root.getNode(color);
@@ -35,7 +35,7 @@ public class OctoTreeColor {
 	return root.depth();
     }
 
-    public Collection<Bag<Color>> getAllIn(@NonNull Cube range) {
+    public List<Bag<Color>> getAllIn(@NonNull Cube range) {
 	timesCalled++;
 	timer.start();
 	linkedList.clear();
@@ -45,7 +45,11 @@ public class OctoTreeColor {
     }
 
     public Bag<Color> get(@NonNull Color color) {
-	return root.get(color);
+	final Bag<Color> get = root.get(color);
+	if (get != null) {
+	    timesCalledInstantly++;
+	}
+	return get;
     }
 
     public boolean remove(@NonNull Color color) {
@@ -81,20 +85,20 @@ public class OctoTreeColor {
 	OctoNode node = root.getNode(color);
 	int DELTA = 0;
 	if (node.size() == 0) {
-	    DELTA = node.bounds.radius + 1;
+	    DELTA = node.bounds.radius;
 	} else {
 	    DELTA = 2;
 	}
-	Optional<Bag<Color>> anyIn;
+	Bag<Color> anyIn;
 	timer.start();
-	Cube centeredAround = Cube.centeredAround(node.bounds, DELTA);
+	Cube centeredAround = Sphere.centeredAround(node.bounds, DELTA);
 	do {
-	    assert DELTA < 10000 : "The shit is real";
-	    anyIn = root.getAnyIn(centeredAround.increaseRadius(1));
+	    assert DELTA < 257 : "The shit is real";
+	    anyIn = root.getAnyIn(centeredAround.increaseRadius(2));
 	    DELTA += 1;
-	} while (!anyIn.isPresent());
+	} while (anyIn == null);
 	gettingTime += timer.total();
-	return anyIn.get();
+	return anyIn;
     }
 }
 
@@ -257,7 +261,7 @@ class OctoNode {
 	}
     }
 
-    public void getAllIn(Cube range, List<Bag<Color>> colors) {
+    public boolean getAllIn(Cube range, List<Bag<Color>> colors) {
 	if (cachedSize > 0) {
 //	    if (range.contains(bounds)) {
 //		getAll(colors);
@@ -267,13 +271,17 @@ class OctoNode {
 		    elements.stream()
 			    .filter(bag -> range.contains(bag.value))
 			    .forEach(colors::add);
+		    return true;
 		} else {
 		    for (OctoNode node : nodes) {
-			node.getAllIn(range, colors);
+			if (node.getAllIn(range, colors)) {
+			    break;
+			}
 		    }
 		}
 	    }
 	}
+	return false;
     }
 
     public Bag<Color> get(Color color) {
@@ -341,7 +349,7 @@ class OctoNode {
 	return null;
     }
 
-    public Optional<Bag<Color>> getAnyIn(Cube range) {
+    public Bag<Color> getAnyIn(Cube range) {
 	if (cachedSize > 0) {
 //	    if (range.contains(bounds)) {
 //		return Optional.of(getAny());
@@ -350,20 +358,20 @@ class OctoNode {
 		if (elements != null) {
 		    for (Bag<Color> next : elements) {
 			if (range.contains(next.value)) {
-			    return Optional.of(next);
+			    return next;
 			}
 		    }
 		} else {
 		    for (OctoNode node : nodes) {
-			Optional<Bag<Color>> opt = node.getAnyIn(range);
-			if (opt.isPresent()) {
+			Bag<Color> opt = node.getAnyIn(range);
+			if (opt != null) {
 			    return opt;
 			}
 		    }
 		}
 	    }
 	}
-	return Optional.empty();
+	return null;
     }
 
     OctoNode getNode(Color color) {

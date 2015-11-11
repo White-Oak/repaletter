@@ -14,8 +14,8 @@ public class Cube {
     final Color color;
     short radius;
 
-    public static Cube centeredAround(int x, int y, int z, int halfSize) {
-	return new Cube(x, y, z, (short) halfSize);
+    public static Cube centeredAround(int x, int y, int z, int radius) {
+	return new Cube(Color.of(x, y, z), (short) radius);
     }
 
     public static Cube centeredAround(Color color, int halfSize) {
@@ -23,7 +23,7 @@ public class Cube {
     }
 
     public static Cube centeredAround(Cube cube, int halfSize) {
-	return centeredAround(cube.getX(), cube.getY(), cube.getZ(), halfSize);
+	return centeredAround(cube.color, halfSize);
     }
 
     protected Cube(int x, int y, int z, short radius) {

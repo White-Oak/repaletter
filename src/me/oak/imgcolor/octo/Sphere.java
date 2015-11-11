@@ -21,14 +21,18 @@ public class Sphere extends Cube {
 
     protected Sphere(int x, int y, int z, int radius) {
 	super(x, y, z, (short) radius);
-	doubledRadius = radius * radius;
-	smallRadius = (int) (Math.sqrt(2) / 2 * radius);
+	calculateRadiuses(radius);
+    }
+
+    private void calculateRadiuses(int radius1) {
+	doubledRadius = getSquare(radius1);
+	smallRadius = SMALL_RADIUSES_CACHE[radius1];
     }
 
     @Override
     public Sphere increaseRadius(int delta) {
 	radius += delta;
-	doubledRadius = radius * radius;
+	calculateRadiuses(radius);
 	return this;
     }
 
@@ -40,16 +44,30 @@ public class Sphere extends Cube {
 
     @Override
     public boolean contains(int x, int y, int z) {
-	if (!super.contains(x, y, z)) {
-	    return false;
-	}
-	final int xC = x - getX();
-	final int yC = y - getY();
-	final int zC = z - getZ();
+//	if (!super.contains(x, y, z)) {
+//	    return false;
+//	}
 	//What if replace squares with lookup tables
-	return (xC * xC
-		+ yC * yC
-		+ zC * zC <= doubledRadius);
+	return (getSquare(x - getX())
+		+ getSquare(y - getY())
+		+ getSquare(z - getZ()) <= doubledRadius);
+    }
+
+    private final static int[] SMALL_RADIUSES_CACHE = new int[257 * 2];
+
+    private static int getSquare(final int abs) {
+	return SQUARES_CACHE[abs + 514];
+    }
+    private final static int[] SQUARES_CACHE = new int[257 * 2 * 2];
+
+    static {
+	for (int i = 0; i < SQUARES_CACHE.length; i++) {
+	    final int name = i - 514;
+	    SQUARES_CACHE[i] = name * name;
+	}
+	for (int i = 0; i < SMALL_RADIUSES_CACHE.length; i++) {
+	    SMALL_RADIUSES_CACHE[i] = (int) (Math.sqrt(2) / 2 * i);
+	}
     }
 
     @Override
