@@ -17,6 +17,13 @@ public class FastOctoStore extends OctoStore {
 
     @Override
     public int getNearest(int color) {
+	Bag<Color> instant = otc.get(Color.of(color));
+	if (instant != null) {
+	    boolean remove = otc.remove(instant.value);
+	    assert remove;
+	    return instant.value.color;
+	}
+
 	Collection<Bag<Color>> colors = null;
 	final Color of = Color.of(color);
 	OctoNode node = otc.getNode(of);
@@ -28,7 +35,7 @@ public class FastOctoStore extends OctoStore {
 	}
 	Cube centeredAround = Cube.centeredAround(of, DELTA);
 	do {
-	    assert DELTA < 10000 : "The shit is real";
+	    assert DELTA < 256 * 2 : "The shit is real";
 	    colors = otc.getAllIn(centeredAround.increaseRadius(1));
 	    DELTA += 1;
 	} while (colors.isEmpty());
