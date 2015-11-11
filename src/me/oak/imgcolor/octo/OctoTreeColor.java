@@ -268,12 +268,14 @@ class OctoNode {
 //	    } else 
 	    if (bounds.intersects(range)) {
 		if (elements != null) {
+		    boolean added = false;
 		    for (Bag<Color> element : elements) {
 			if (range.contains(element.value)) {
 			    colors.add(element);
+			    added = true;
 			}
 		    }
-		    return true;
+		    return added;
 		} else {
 		    for (OctoNode node : nodes) {
 			if (node.getAllIn(range, colors)) {
@@ -394,6 +396,11 @@ class OctoNode {
 
     public boolean contains(Color color) {
 	return bounds.contains(color);
+    }
+
+    @Override
+    public String toString() {
+	return "OctoNode{" + "cachedSize=" + cachedSize + '}';
     }
 
 }
