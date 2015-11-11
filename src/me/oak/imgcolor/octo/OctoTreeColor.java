@@ -268,9 +268,11 @@ class OctoNode {
 //	    } else 
 	    if (bounds.intersects(range)) {
 		if (elements != null) {
-		    elements.stream()
-			    .filter(bag -> range.contains(bag.value))
-			    .forEach(colors::add);
+		    for (Bag<Color> element : elements) {
+			if (range.contains(element.value)) {
+			    colors.add(element);
+			}
+		    }
 		    return true;
 		} else {
 		    for (OctoNode node : nodes) {
